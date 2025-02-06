@@ -20,4 +20,22 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+
+    private void UseCurrentLocationButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        
+    }
+
+    private void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            
+        }
+    }
+
+    private void Search()
+    {
+        
+    }
 }

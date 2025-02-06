@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace WeatherMap.FileReader;
 
@@ -43,8 +44,9 @@ public class FileReader
         {
             sReturnString = reader.ReadToEnd();
         }
-        
-        sReturnString = JsonSerializer.Deserialize<string>(sReturnString);
+
+        JsonObject json = JsonSerializer.Deserialize<JsonObject>(sReturnString);
+        //sReturnString = json.;
         
         return sReturnString;
     }
