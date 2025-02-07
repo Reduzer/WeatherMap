@@ -39,7 +39,7 @@
                 Name="UseCurrentLocationButton"
                 Click="UseCurrentLocationButton_OnClick"
                 Margin="650,10,10,0"
-                Content="Use Current Location"
+                Content="Get data"
                 Background="#606060"
                 Foreground="White"
                 BorderBrush="Black">
@@ -52,7 +52,9 @@
                 HorizontalContentAlignment="Center"
                 Background="#606060"
                 Foreground="White"
-                BorderBrush="Black">
+                BorderBrush="Black"
+                GotFocus="LocationInput_OnGotFocus"
+                LostFocus="LocationInput_OnLostFocus">
                 Location's Name
             </TextBox>
         </Grid>

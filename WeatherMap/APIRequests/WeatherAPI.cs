@@ -27,10 +27,13 @@ public class WeatherAPI
         try
         {
             JSONObjectFromString? data = null;
+            JSONObjectFromString temp = null;
 
             using (m_oClient = new HttpClient())
             {
-                using (HttpResponseMessage response = m_oClient.GetAsync(new Uri(m_sBaseURL + m_sAPIKey + "?q" + sName)).Result)
+                Uri uri = new Uri(m_sBaseURL + m_sAPIKey + "&q=" + sName);
+                
+                using (HttpResponseMessage response = m_oClient.GetAsync(uri).Result)
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
@@ -42,15 +45,17 @@ public class WeatherAPI
 
                                 JsonNode? jobject = JsonObject.Parse(sResponse);
 
-                                data = JsonSerializer.Deserialize<JSONObjectFromString>(jobject["current"].ToString(), new JsonSerializerOptions { WriteIndented = true });
+                                temp = JsonSerializer.Deserialize<JSONObjectFromString>(jobject["current"].ToString(), new JsonSerializerOptions { WriteIndented = true });
                                 data = JsonSerializer.Deserialize<JSONObjectFromString>(jobject["location"].ToString(), new JsonSerializerOptions { WriteIndented = true });
                             }
                         }
                     }
                 }
             }
-
-
+            data.dTemperature = temp.dTemperature;
+            data.dHumidity = temp.dHumidity;
+            data.dWindSpeed = temp.dWindSpeed;
+            
             return data;
         }
         catch (HttpRequestException e)
