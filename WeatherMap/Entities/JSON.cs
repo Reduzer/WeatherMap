@@ -2,13 +2,13 @@
 
 namespace WeatherMap.Entities;
 
-public class JSON
+public class JSONObjectFromString
 {
-    [JsonPropertyName("sName")] public string sName { get; set; }
-    [JsonPropertyName("sCounty")] public string sCounty { get; set; }
-    [JsonPropertyName("dLatitude")] public double Latitude { get; set; }
-    [JsonPropertyName("dLongitude")] public double Longitude { get; set; }
-    [JsonPropertyName("dTemperature")] public double dTemperature { get; set; }
-    [JsonPropertyName("dWindSpeed")] public double dWindSpeed { get; set; }
-    [JsonPropertyName("dHumidity")] public double dHumidity { get; set; }
+    [JsonPropertyName("name")] public string sName { get; set; }
+    [JsonPropertyName("country")] public string sCountry { get; set; }
+    [JsonPropertyName("lat")] public double Latitude { get; set; }
+    [JsonPropertyName("lon")] public double Longitude { get; set; }
+    [JsonPropertyName("temp_c")] public double dTemperature { get; set; }
+    [JsonPropertyName("wind_kph")] public double dWindSpeed { get; set; }
+    [JsonPropertyName("humidity")] public double dHumidity { get; set; }
 }

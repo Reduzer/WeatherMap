@@ -46,7 +46,10 @@ public class FileReader
         }
 
         JsonObject json = JsonSerializer.Deserialize<JsonObject>(sReturnString);
-        //sReturnString = json.;
+        if (json.ContainsKey("key"))
+        {
+            sReturnString = json["key"].ToString();
+        }
         
         return sReturnString;
     }

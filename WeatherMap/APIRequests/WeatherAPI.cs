@@ -1,4 +1,12 @@
-﻿using System.Net.Http;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Sockets;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using WeatherMap.Entities;
 
 namespace WeatherMap.APIRequests;
@@ -6,37 +14,54 @@ namespace WeatherMap.APIRequests;
 public class WeatherAPI
 {
     private HttpClient m_oClient;
-    private const string m_sBaseURL = "https://api.openweathermap.org/data/2.5/";
-    
+    private const string m_sBaseURL = "https://api.weatherapi.com/v1/current.json?key=";
     private string m_sAPIKey;
 
     public WeatherAPI()
     {
-        m_sAPIKey = FileReader.FileReader.Instance.ReadFile();   
+        m_sAPIKey = FileReader.FileReader.Instance.ReadFile();
     }
 
-    public Weather GetDataForCity(string sName)
+    public async Task<JSONObjectFromString?> GetDataForCity(string sName)
     {
-        return null;
-    }
-
-    public Weather GetDataForCity(int zipcode)
-    {
-        return null;
-    }
-
-    public Weather GetDataForCity(double latitude, double longitude)
-    {
-        return null;
-    }
-
-    private string prepareRequest()
-    {
-        using (HttpRequestMessage oRequest = new HttpRequestMessage(HttpMethod.Get, m_sBaseURL))
+        try
         {
-            
+            JSONObjectFromString? data = null;
+
+            using (m_oClient = new HttpClient())
+            {
+                using (HttpResponseMessage response = m_oClient.GetAsync(new Uri(m_sBaseURL + m_sAPIKey + "?q" + sName)).Result)
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        using (Stream stream = response.Content.ReadAsStream())
+                        {
+                            using (StreamReader streamReader = new StreamReader(stream, Encoding.UTF8))
+                            {
+                                string sResponse = streamReader.ReadToEnd();
+
+                                JsonNode? jobject = JsonObject.Parse(sResponse);
+
+                                data = JsonSerializer.Deserialize<JSONObjectFromString>(jobject["current"].ToString(), new JsonSerializerOptions { WriteIndented = true });
+                                data = JsonSerializer.Deserialize<JSONObjectFromString>(jobject["location"].ToString(), new JsonSerializerOptions { WriteIndented = true });
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            return data;
         }
-        
-        return String.Empty;
+        catch (HttpRequestException e)
+        {
+            Debug.WriteLine("Exception catched! \n Message: {0}", e.Message);
+            return null;
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine("Exception catched! \n Message: {0}", e.Message);
+            return null;
+        }
     }
 }
